@@ -14,12 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       endpoints: {
         getFields: { point: "get_fields" },
-        getListItem: { point: "get_ids" },
+        getListId: { point: "get_ids", params: ['offset', "limit"]}, // возможен без парамсов
       },
     },
   );
 
-  FETCH_API.request("getFields").then((response) => console.log(response));
+  FETCH_API.request("getListId", [0, 10]).then((response) => console.log(response));
   // FETCH_API.request("getListItem",
   //     {
   //         "action": "get_ids",
