@@ -2,12 +2,14 @@ import { FetchApi } from "./FetchApi";
 
 document.addEventListener("DOMContentLoaded", () => {
   let today = new Date();
-
   let timestamp = Intl.DateTimeFormat("ru-Ru").format(today);
-  timestamp = timestamp.split(".").reverse().join("");
-  console.log(timestamp)
+  timestamp = timestamp
+    .split(".")
+    .reverse()
+    .join("");
 
   const FETCH_API = new FetchApi(
+    'http://api.valantis.store:40000/',
     timestamp,
     {
       endpoints: {

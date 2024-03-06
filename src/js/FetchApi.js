@@ -1,3 +1,5 @@
+import { md5 } from "js-md5";
+
 /**
  * Обработка обращений к серверу по REST
  */
@@ -8,8 +10,9 @@ export class FetchApi {
   method;
   currentEndpoint;
 
-  constructor(date, object) {
-    this.xauth = `md5(valantis_20240305)`;
+  constructor(url, timestamp, object) {
+    this.url = url;
+    this.xauth = md5(`Valantis_${timestamp}`);
     this.endpoints = object.endpoints;
   }
 
@@ -32,17 +35,14 @@ export class FetchApi {
   }
 
   async _fetch(endpoint, requestData, responseType = "JSON") {
-    return await fetch(`http://api.valantis.store:40000/`, requestData)
+    return await fetch(this.url, requestData)
       .then((data) => {
-        if (data.ok) {
-          switch (responseType) {
-            case "TEXT":
-              return data.text();
-            default:
-              return data.json();
-          }
-        } else {
-          throw data;
+        if (!data.ok) throw data;
+        switch (responseType) {
+          case "TEXT":
+            return data.text();
+          default:
+            return data.json();
         }
       })
       .catch((e) => {
@@ -76,14 +76,12 @@ export class FetchApi {
   _setOptions() {
     return {
       method: 'POST',
-      // referrerPolicy: "origin-when-cross-origin",
-      // credentials: 'include',
       headers: {
         // mode: "no-cors",
         //   cache: 'no-cache',
         //   credentials: 'same-origin',
         'Content-Type': 'application/json',
-        'X-Auth': 'a45cbdfd64776f5e4838b61122540faf',
+        'X-Auth': this.xauth,
       },
       body: JSON.stringify({
         'action': this.currentEndpoint,
