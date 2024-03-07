@@ -1,7 +1,5 @@
 export class ProductStorage {
-
-    constructor(productInformation){
-        this.listProducts = productInformation;
-        
-    }
+  constructor(productInformation) {
+    this.listProducts = productInformation;
+  }
 }

@@ -7,6 +7,7 @@ export class FetchApi {
   set;
   endpoints = {};
   requestData;
+  options={};
   method;
   currentEndpoint;
   currentParams;
@@ -19,16 +20,15 @@ export class FetchApi {
 
   request(type, data = undefined) {
     this.currentEndpoint = this.endpoints[type].point; // тип запроса 
-    if (data) this.currentParams = this.endpoints[type].params; // параметры запроса   
+    if (data) this._getFormData(data);   
+    this._setOptions(this.options)
+    console.log(this.currentParams, data)
     return this._fetch(
         this.currentEndpoint,
-        this._setOptions()
-    );
+      );
   }
 
   async _fetch(endpoint, requestData, responseType = "JSON") {
-    console.log(requestData);
-    debugger
     return await fetch(this.url, requestData)
       .then(
         response => {
@@ -62,16 +62,18 @@ export class FetchApi {
       });
   }
 
-  _getFormData() {
+  _getFormData(params) {
     /* --- */
-    const formData = new FormData();
-    Object.keys(this.requestData.params).forEach((key) =>
-      formData.append(key, this.requestData.params[key])
+    let formDataParams = new FormData();
+    Object.keys(params).forEach((key) =>
+      formDataParams.append(key, params[key])
     );
-    this.options = formData;
+    
+    
+    this.options = formDataParams;
   }
 
-  _setOptions() {
+  _setOptions(params) {
     return {
       method: 'POST',
       headers: {
@@ -80,7 +82,7 @@ export class FetchApi {
       },
       body: JSON.stringify({
         'action': this.currentEndpoint,
-        'params': this.currentParams ? this._getFormData() : {},
+        'params': params,
       }),
     };
   }
