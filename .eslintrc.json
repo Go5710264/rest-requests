@@ -2,10 +2,10 @@
     "extends": "airbnb-base",
     "env": {
        "es6": true,
-       "browser": true,
-       "jest": true
+       "browser": true
     },
     "rules": {
+      "import/prefer-default-export":"off",
       "no-restricted-syntax": [
         "error",
         "LabeledStatement",
@@ -15,6 +15,18 @@
         "error", 
         {
           "devDependencies": true
+        }
+      ],
+      "no-underscore-dangle":[
+        "error",
+        {
+          "allowAfterThis": true
+        }
+      ],
+      "no-unused-expressions": [
+        "error", 
+        { 
+          "allowTernary": true 
         }
       ]
     }

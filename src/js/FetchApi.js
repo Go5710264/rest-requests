@@ -1,89 +1,101 @@
-import { md5 } from "js-md5";
+import { md5 } from 'js-md5';
 
-/**
- * Обработка обращений к серверу по REST
- */
 export class FetchApi {
-  set;
-  endpoints = {};
-  requestData;
-  options={};
-  method;
-  currentEndpoint;
-  currentParams;
-
   constructor(url, timestamp, object) {
+    this.curEndpoint = undefined;
+    this.curParams = undefined;
+    this.requestBody = {};
     this.url = url;
     this.xauth = md5(`Valantis_${timestamp}`);
     this.endpoints = object.endpoints;
+    this.options = {};
   }
 
   request(type, data = undefined) {
-    this.currentEndpoint = this.endpoints[type].point; // тип запроса 
-    if (data) this._getFormData(data);   
-    this._setOptions(this.options)
-    console.log(this.currentParams, data)
-    return this._fetch(
-        this.currentEndpoint,
-      );
+    this.curEndpoint = this.endpoints[type].point;
+    this.curParams = this.endpoints[type].params;
+    data ? this._setRequestBody(data) : this._setRequestBody();
+    this._setOptions();
+
+    return this._fetch();
   }
 
-  async _fetch(endpoint, requestData, responseType = "JSON") {
-    return await fetch(this.url, requestData)
+  async _fetch(responseType = 'JSON') {
+    return await fetch(this.url, this.options)
       .then(
-        response => {
+        (response) => {
           switch (responseType) {
-            case "TEXT":
+            case 'TEXT':
               return response.text();
             default:
               return response.json();
           }
         },
-        reject => new Error(reject)
+        (reject) => {
+          new Error(reject)
+          console.log('ошибка')
+        },
       )
-      .catch(error => {
-        throw new Error(error)
-        // if (e.status >= 400 && e.status < 500) {
-        //   return {
-        //     error: e.status,
-        //     message: `Ошибка доступа по адресу ${e.url}, неправильный адрес запроса или иная ошибка на стороне клиента(браузера)`,
-        //   };
-        // } else if (e.status >= 500) {
-        //   return {
-        //     error: e.status,
-        //     message: `Ошибка на стороне сервера по адресу ${e.url}, обратитесь в поддержку, либо попробуйте снова.`,
-        //   };
-        // } else {
-        //   return {
-        //     error: e.status,
-        //     message: ` ${e.url} - Tакого эндпоинта не существует или отказано в доступе`,
-        //   };
-        // }
+      .catch((e) => {
+        debugger
+        console.log(e)
+        console.log(e.message)
+        console.log(e.response)
+        // throw new Error(error);
+        if (e.status >= 400 && e.status < 500) {
+          return {
+            error: e.status,
+            message:
+        `Ошибка доступа по адресу ${e.url},
+        неправильный адрес запроса или иная ошибка на стороне клиента(браузера)`,
+          };
+        } 
+        if (e.status >= 500) {
+          return {
+            error: e.status,
+            message: `Ошибка на стороне сервера по адресу ${e.url},
+         обратитесь в поддержку, либо попробуйте снова.`,
+          };
+        }
+        return {
+          error: e.status,
+          message: ` ${e.url} - Tакого эндпоинта не существует или отказано в доступе`,
+        };
       });
+    // return this.response;
   }
 
-  _getFormData(params) {
-    /* --- */
-    let formDataParams = new FormData();
-    Object.keys(params).forEach((key) =>
-      formDataParams.append(key, params[key])
-    );
-    
-    
-    this.options = formDataParams;
+  _setRequestBody(paramsData) {
+    if (paramsData) this._correctRequestParams(paramsData);
+    this.requestBody = JSON.stringify({
+      action: this.curEndpoint,
+      params: paramsData,
+    });
   }
 
-  _setOptions(params) {
-    return {
+  _setOptions() {
+    this.options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Auth': this.xauth,
       },
-      body: JSON.stringify({
-        'action': this.currentEndpoint,
-        'params': params,
-      }),
+      body: this.requestBody,
     };
+  }
+
+  /* Попытка реализовать проверку параметров запроса */
+  _correctRequestParams(parameters) {
+    try {
+      const paramKeys = Object.keys(parameters);
+      const isCorrectParams = this.getJson(paramKeys) === this.getJson(this.curParams);
+      if (!isCorrectParams) throw new Error('Не верно указаны параметры запроса, обратитесь к FETCH_API');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  getJson(value) {
+    return JSON.stringify(value);
   }
 }
