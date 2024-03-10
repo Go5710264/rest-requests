@@ -6,9 +6,9 @@ import { ProductItem } from './ProductItem';
 import { ProductStorage } from './ProductsStorage';
 
 document.addEventListener('DOMContentLoaded', () => {
-  function getTimestamp(){
+  function getTimestamp() {
     const today = new Date();
-    let timestamp = Intl.DateTimeFormat('ru-Ru').format(today);
+    const timestamp = Intl.DateTimeFormat('ru-Ru').format(today);
     return timestamp.split('.').reverse().join('');
   }
 
@@ -37,11 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const FOOTER_CONTROLLER = new PaginationControl(
-    "footer__pagination",
+    'footer__pagination',
     'footer__pagination-item',
     'footer__pagination-arrow',
     changingPage,
-  )
+  );
 
   const FILTERS = new Filters(
     ['product', 'price', 'brand'],
@@ -59,16 +59,15 @@ document.addEventListener('DOMContentLoaded', () => {
   INPUT_CONTROLLER.addBlockingEvents();
   INPUT_CONTROLLER.addEventClickButton(requestWithFilter);
 
-  function filterSelection(filter){
+  function filterSelection(filter) {
     INPUT_CONTROLLER.removeBlockingEvents();
     INPUT_CONTROLLER.setSelectedFilter(filter);
   }
 
   function requestWithFilter(currentFilter, valueInput) {
-
-    FETCH_API.request('filter', {[currentFilter]: valueInput})
-      .then(({result: response}) => sendArrId(response))
-      .catch(error => console.error(error))
+    FETCH_API.request('filter', { [currentFilter]: valueInput })
+      .then(({ result: response }) => sendArrId(response))
+      .catch((error) => console.error(error));
   }
 
   function getItemStorage(productData) {
@@ -80,35 +79,35 @@ document.addEventListener('DOMContentLoaded', () => {
     return PRODUCT_ITEM.getElement();
   }
 
-  function fillStorage(arrTagProducts){
-    PRODUCT_STORAGE.cleanStorage() 
+  function fillStorage(arrTagProducts) {
+    PRODUCT_STORAGE.cleanStorage();
     PRODUCT_STORAGE.addProducts(arrTagProducts);
     FOOTER_CONTROLLER.removeBlockingEvents();
   }
 
-  function sendArrId(arrList){
+  function sendArrId(arrList) {
     const noDuplicateIds = Array.from(new Set(arrList));
     FETCH_API.request('getItems', { ids: noDuplicateIds }).then(({ result: arrProducts }) => {
-      const listProduct = arrProducts.map((productItem) => getItemStorage(productItem))
+      const listProduct = arrProducts.map((productItem) => getItemStorage(productItem));
       fillStorage(listProduct);
     });
   }
 
   let currentPage;
 
-  function changingPage (numberPage = 1){
-    numberPage = parseInt(numberPage)
-    if(currentPage === numberPage) return false;
-    currentPage = numberPage;
-    const initProduct = numberPage === 1 ? 1 : numberPage * 50;
+  function changingPage(numberPage = 1) {
+    const currentNumberPage = parseInt(numberPage, 10);
+    if (currentPage === currentNumberPage) return;
+    currentPage = currentNumberPage;
+    const initProduct = currentNumberPage === 1 ? 1 : currentNumberPage * 50;
     FOOTER_CONTROLLER.addBlockingEvents();
-    FOOTER_CONTROLLER.setCurrentPage(numberPage);
+    FOOTER_CONTROLLER.setCurrentPage(currentNumberPage);
 
     FETCH_API.request('getListId', { offset: initProduct, limit: 10 })
       .then(({ result: response }) => sendArrId(response))
-      .catch(error => console.error(error))
-  };
-  
+      .catch((error) => console.error(error));
+  }
+
   changingPage();
   FOOTER_CONTROLLER.addEvent();
 });

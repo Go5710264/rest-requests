@@ -5,11 +5,11 @@ export class ProductStorage {
   }
 
   addProducts(element) {
-    this.storageContent = element.map(product => this.storage.appendChild(product));
+    this.storageContent = element.map((product) => this.storage.appendChild(product));
   }
 
   cleanStorage() {
-    if(this.storageContent)this.storage.innerHTML = '';
+    if (this.storageContent) this.storage.innerHTML = '';
   }
 
   getStorageContent() {

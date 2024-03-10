@@ -1,46 +1,47 @@
-export class PaginationControl{
-    constructor(
-        wrapperSelector,
-        paginationItemSelector, 
-        paginationArrowSelector,
-        handlerClickPagination
-    ){
-        this.paginationWrapper = document.querySelector(`.${wrapperSelector}`);
-        this.paginationItems = document.querySelectorAll(`.${paginationItemSelector}`);
-        this.paginationArrow = document.querySelectorAll(`.${paginationArrowSelector}`);
-        this.paginationArrowSelector = paginationArrowSelector;
-        this.handlerClickPagination = handlerClickPagination;
-        this.currentPageNumber = undefined;
-        this.currentPageTag = undefined;
-    }
+export class PaginationControl {
+  constructor(
+    wrapperSelector,
+    paginationItemSelector,
+    paginationArrowSelector,
+    handlerClickPagination,
+  ) {
+    this.pagWrapper = document.querySelector(`.${wrapperSelector}`);
+    this.pagItems = document.querySelectorAll(`.${paginationItemSelector}`);
+    this.pagArrow = document.querySelectorAll(`.${paginationArrowSelector}`);
+    this.pagArrowSelector = paginationArrowSelector;
+    this.handlerClickPagination = handlerClickPagination;
+    this.curPageNum = undefined;
+    this.curTag = undefined;
+  }
 
-    addEvent() {
-        Array.from(this.paginationItems).forEach(item => item.addEventListener('click',
-            () => this.handlerClickPagination(item.textContent)
-        ))
-        Array.from(this.paginationArrow).forEach(item => item.addEventListener('click', (e) => this.handlerClickArrow(item)))
-    }
+  addEvent() {
+    Array.from(this.pagItems).forEach((item) => item.addEventListener(
+      'click',
+      () => this.handlerClickPagination(item.textContent),
+    ));
+    Array.from(this.pagArrow).forEach((item) => item.addEventListener('click', () => this.handlerClickArrow(item)));
+  }
 
-    handlerClickArrow(item){
-        item.classList.contains(`${this.paginationArrowSelector}_back-page`) 
-            ? this.currentPageNumber-- 
-            : this.currentPageNumber++;
-        if(this.currentPageNumber === 0) this.currentPageNumber = 1;
-        this.handlerClickPagination(this.currentPageNumber);
-    }
+  handlerClickArrow(item) {
+    item.classList.contains(`${this.pagArrowSelector}_back-page`)
+      ? this.curPageNum -= 1
+      : this.curPageNum += 1;
+    if (this.curPageNum === 0) this.curPageNum = 1;
+    this.handlerClickPagination(this.curPageNum);
+  }
 
-    addBlockingEvents(){
-        [...this.paginationArrow, this.paginationWrapper].forEach(item => item.classList.add('events-blocked'))
-    }
+  addBlockingEvents() {
+    [...this.pagArrow, this.pagWrapper].forEach((item) => item.classList.add('events-blocked'));
+  }
 
-    removeBlockingEvents(){
-        [...this.paginationArrow, this.paginationWrapper].forEach(item => item.classList.remove('events-blocked'))
-    }
+  removeBlockingEvents() {
+    [...this.pagArrow, this.pagWrapper].forEach((item) => item.classList.remove('events-blocked'));
+  }
 
-    setCurrentPage(numberPage){
-        if(this.currentPageTag)this.currentPageTag.classList.remove('footer__pagination-item_active');
-        this.currentPageNumber = numberPage;
-        this.currentPageTag = [...this.paginationItems].find(item => parseInt(item.textContent) === this.currentPageNumber);
-        this.currentPageTag.classList.add('footer__pagination-item_active')
-    }
+  setCurrentPage(numberPage) {
+    if (this.curTag) this.curTag.classList.remove('footer__pagination-item_active');
+    this.curPageNum = numberPage;
+    this.curTag = [...this.pagItems].find((i) => parseInt(i.textContent, 10) === this.curPageNum);
+    this.curTag.classList.add('footer__pagination-item_active');
+  }
 }

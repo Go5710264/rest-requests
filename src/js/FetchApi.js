@@ -21,7 +21,7 @@ export class FetchApi {
   }
 
   async _fetch(responseType = 'JSON') {
-    return await fetch(this.url, this.options)
+    this.resultRequest = await fetch(this.url, this.options)
       .then(
         (response) => {
           switch (responseType) {
@@ -31,20 +31,16 @@ export class FetchApi {
               return response.json();
           }
         },
-        (reject) => {
-          new Error(reject)
-          console.log('ошибка')
-        },
       )
-      .catch((e) =>{ 
-        debugger
-       console.error(e.message);
-       this._fetch()
-      })
+      .catch((err) => {
+        console.error(err.message);
+      });
+
+    return this.resultRequest;
   }
 
   _setRequestBody(paramsData) {
-    // if (paramsData) this._correctRequestParams(paramsData);
+    if (paramsData && this.curEndpoint !== 'filter') this._correctRequestParams(paramsData);
     this.requestBody = JSON.stringify({
       action: this.curEndpoint,
       params: paramsData,
@@ -62,18 +58,13 @@ export class FetchApi {
     };
   }
 
-  /* Попытка реализовать проверку параметров запроса */
-  // _correctRequestParams(parameters) {
-  //   try {
-  //     const paramKeys = Object.keys(parameters);
-  //     const isCorrectParams = this.getJson(paramKeys) === this.getJson(this.curParams);
-  //     if (!isCorrectParams) throw new Error('Не верно указаны параметры запроса, обратитесь к FETCH_API');
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
-  getJson(value) {
-    return JSON.stringify(value);
+  _correctRequestParams(parameters) {
+    try {
+      const paramKeys = Object.keys(parameters);
+      const isCorParams = this.curParams.every((param) => paramKeys.some((item) => item === param));
+      if (!isCorParams) { throw new Error('Не верно указаны параметры запроса'); }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
