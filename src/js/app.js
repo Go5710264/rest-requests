@@ -1,6 +1,7 @@
 import { FetchApi } from './FetchApi';
 import { Filters } from './Filters';
 import { PaginationControl } from './FooterController';
+import { InputController } from './InputController';
 import { ProductItem } from './ProductItem';
 import { ProductStorage } from './ProductsStorage';
 
@@ -14,9 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     timestamp,
     {
       endpoints: {
-        getFields: { point: 'get_fields' },
+        getFields: { point: 'get_fields', params: ['field', 'offset', 'limit'] },
         getListId: { point: 'get_ids', params: ['offset', 'limit'] }, // возможен без парамсов
         getItems: { point: 'get_items', params: ['ids'] },
+        filter: { point: 'filter', params: ['product', 'price', 'brand'] },
       },
     },
   );
@@ -36,17 +38,38 @@ document.addEventListener('DOMContentLoaded', () => {
     "footer__pagination",
     'footer__pagination-item',
     'footer__pagination-arrow',
-    changingPage
+    changingPage,
   )
 
   const FILTERS = new Filters(
+    ['product', 'price', 'brand'],
     'header__filter',
-    'header__filter_name',
-    'header__filter_price',
-    'header__filter_brand'
+    filterSelection,
   );
 
-  FILTERS.showFilters();
+  const INUPT_CONTROLLER = new InputController(
+    'header__input-wrapper',
+    'header__input',
+    'header__input-button',
+  );
+
+  FILTERS.addEvent();
+  INUPT_CONTROLLER.addEventClickButton(requestWithFilter);
+  INUPT_CONTROLLER.addBlockingEvents();
+
+  function filterSelection(filter){
+    INUPT_CONTROLLER.removeBlockingEvents();
+    INUPT_CONTROLLER.setSelectedFilter(filter);
+  }
+
+  function requestWithFilter(valueInput, currentFilter) {
+    FETCH_API.request('filter', {[currentFilter]: valueInput}).then(
+      ({ result: response }) => {
+        const noDuplicateResult = Array.from(new Set(response)); // Только два дублирующих ID?
+        console.log(noDuplicateResult)
+      }
+    )
+  }
 
   let currentPage = undefined;
 

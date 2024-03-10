@@ -66,7 +66,7 @@ export class FetchApi {
   }
 
   _setRequestBody(paramsData) {
-    if (paramsData) this._correctRequestParams(paramsData);
+    // if (paramsData) this._correctRequestParams(paramsData);
     this.requestBody = JSON.stringify({
       action: this.curEndpoint,
       params: paramsData,
@@ -85,15 +85,15 @@ export class FetchApi {
   }
 
   /* Попытка реализовать проверку параметров запроса */
-  _correctRequestParams(parameters) {
-    try {
-      const paramKeys = Object.keys(parameters);
-      const isCorrectParams = this.getJson(paramKeys) === this.getJson(this.curParams);
-      if (!isCorrectParams) throw new Error('Не верно указаны параметры запроса, обратитесь к FETCH_API');
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  // _correctRequestParams(parameters) {
+  //   try {
+  //     const paramKeys = Object.keys(parameters);
+  //     const isCorrectParams = this.getJson(paramKeys) === this.getJson(this.curParams);
+  //     if (!isCorrectParams) throw new Error('Не верно указаны параметры запроса, обратитесь к FETCH_API');
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
   getJson(value) {
     return JSON.stringify(value);

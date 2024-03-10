@@ -14,7 +14,8 @@ $colorMainFont: #262633;
   pointer-events: none;
 }
 
-.hello-world{
-  &__container-box{
+.header{
+  &__filter{
+    color: black;
   }
 }

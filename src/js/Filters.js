@@ -1,17 +1,25 @@
 export class Filters{
     constructor(
-        filtersSelector,
-        filterNameSelector,
-        filterPriceSelector,
-        filterBrandSelector
+        typeFilters,
+        filterSelector,
+        handlerFiltering,
     ){
-        this.filtersList=document.querySelectorAll(`.${filtersSelector}`);
-        this.filterName=document.querySelector(`.${filterNameSelector}`);
-        this.filterPrice=document.querySelector(`.${filterPriceSelector}`);
-        this.filterBrand=document.querySelector(`.${filterBrandSelector}`)
+        this.typeFilters = typeFilters;
+        this.filterSelector = filterSelector;
+        this.filtersList=document.querySelectorAll(`.${filterSelector}`);
+        this.handlerFiltering = handlerFiltering; 
     }
 
     showFilters(){
         console.log(this.filtersList)
+    }
+
+    addEvent(){
+        this.filtersList.forEach(filterButton => filterButton.addEventListener('click', () => this.wrapperHandler(filterButton)))
+    }
+
+    wrapperHandler(element){
+        const selectedFilter = this.typeFilters.find(type => element.classList.contains(`${this.filterSelector}_${type}`))
+        this.handlerFiltering(selectedFilter);
     }
 }

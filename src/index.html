@@ -9,11 +9,20 @@
 <body>
     <main class="main-container">
 
-        <section class="section header">
+        <section class="header">
             <div class="container-box header__container-box">
-                <a href="#" class="header__filter header__filter_name">Фильтрация по названию</a>
-                <a href="#" class="header__filter header__filter_price">Фильтрация по цене</a>
-                <a href="#" class="header__filter header__filter_brand">Фильтрация по бренду</a>
+                <div class="header__filter-wrapper">
+                    <a href="#" class="header__filter header__filter_product">Фильтрация по названию</a>
+                    <a href="#" class="header__filter header__filter_price">Фильтрация по цене</a>
+                    <a href="#" class="header__filter header__filter_brand">Фильтрация по бренду</a>
+                </div>
+                <div class="header__input-wrapper">
+                    <input type="text" class="header__input">
+                    <button class="header__input-button">Поиск</button>
+                    <ul class="header__input-suggest-list">
+                        
+                    </ul>
+                </div>
             </div>
         </section>
 
