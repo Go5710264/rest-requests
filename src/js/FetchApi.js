@@ -36,33 +36,11 @@ export class FetchApi {
           console.log('ошибка')
         },
       )
-      .catch((e) => {
+      .catch((e) =>{ 
         debugger
-        console.log(e)
-        console.log(e.message)
-        console.log(e.response)
-        // throw new Error(error);
-        if (e.status >= 400 && e.status < 500) {
-          return {
-            error: e.status,
-            message:
-        `Ошибка доступа по адресу ${e.url},
-        неправильный адрес запроса или иная ошибка на стороне клиента(браузера)`,
-          };
-        } 
-        if (e.status >= 500) {
-          return {
-            error: e.status,
-            message: `Ошибка на стороне сервера по адресу ${e.url},
-         обратитесь в поддержку, либо попробуйте снова.`,
-          };
-        }
-        return {
-          error: e.status,
-          message: ` ${e.url} - Tакого эндпоинта не существует или отказано в доступе`,
-        };
-      });
-    // return this.response;
+       console.error(e.message);
+       this._fetch()
+      })
   }
 
   _setRequestBody(paramsData) {

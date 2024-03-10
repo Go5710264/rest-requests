@@ -6,13 +6,15 @@ import { ProductItem } from './ProductItem';
 import { ProductStorage } from './ProductsStorage';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const today = new Date();
-  let timestamp = Intl.DateTimeFormat('ru-Ru').format(today);
-  timestamp = timestamp.split('.').reverse().join('');
+  function getTimestamp(){
+    const today = new Date();
+    let timestamp = Intl.DateTimeFormat('ru-Ru').format(today);
+    return timestamp.split('.').reverse().join('');
+  }
 
   const FETCH_API = new FetchApi(
     'http://api.valantis.store:40000/',
-    timestamp,
+    getTimestamp(),
     {
       endpoints: {
         getFields: { point: 'get_fields', params: ['field', 'offset', 'limit'] },
@@ -47,31 +49,52 @@ document.addEventListener('DOMContentLoaded', () => {
     filterSelection,
   );
 
-  const INUPT_CONTROLLER = new InputController(
+  const INPUT_CONTROLLER = new InputController(
     'header__input-wrapper',
     'header__input',
     'header__input-button',
   );
 
   FILTERS.addEvent();
-  INUPT_CONTROLLER.addEventClickButton(requestWithFilter);
-  INUPT_CONTROLLER.addBlockingEvents();
+  INPUT_CONTROLLER.addBlockingEvents();
+  INPUT_CONTROLLER.addEventClickButton(requestWithFilter);
 
   function filterSelection(filter){
-    INUPT_CONTROLLER.removeBlockingEvents();
-    INUPT_CONTROLLER.setSelectedFilter(filter);
+    INPUT_CONTROLLER.removeBlockingEvents();
+    INPUT_CONTROLLER.setSelectedFilter(filter);
   }
 
-  function requestWithFilter(valueInput, currentFilter) {
-    FETCH_API.request('filter', {[currentFilter]: valueInput}).then(
-      ({ result: response }) => {
-        const noDuplicateResult = Array.from(new Set(response)); // Только два дублирующих ID?
-        console.log(noDuplicateResult)
-      }
-    )
+  function requestWithFilter(currentFilter, valueInput) {
+
+    FETCH_API.request('filter', {[currentFilter]: valueInput})
+      .then(({result: response}) => sendArrId(response))
+      .catch(error => console.error(error))
   }
 
-  let currentPage = undefined;
+  function getItemStorage(productData) {
+    const PRODUCT_ITEM = new ProductItem(
+      PRODUCT_ELEMENT_SELECTORS,
+      productData,
+    );
+    PRODUCT_ITEM.createElement();
+    return PRODUCT_ITEM.getElement();
+  }
+
+  function fillStorage(arrTagProducts){
+    PRODUCT_STORAGE.cleanStorage() 
+    PRODUCT_STORAGE.addProducts(arrTagProducts);
+    FOOTER_CONTROLLER.removeBlockingEvents();
+  }
+
+  function sendArrId(arrList){
+    const noDuplicateIds = Array.from(new Set(arrList));
+    FETCH_API.request('getItems', { ids: noDuplicateIds }).then(({ result: arrProducts }) => {
+      const listProduct = arrProducts.map((productItem) => getItemStorage(productItem))
+      fillStorage(listProduct);
+    });
+  }
+
+  let currentPage;
 
   function changingPage (numberPage = 1){
     numberPage = parseInt(numberPage)
@@ -81,25 +104,9 @@ document.addEventListener('DOMContentLoaded', () => {
     FOOTER_CONTROLLER.addBlockingEvents();
     FOOTER_CONTROLLER.setCurrentPage(numberPage);
 
-    FETCH_API.request('getListId', { offset: initProduct, limit: 10 }).then(({ result: response }) => {
-      const noDuplicateIds = Array.from(new Set(response)); // Только два дублирующих ID?
-      FETCH_API.request('getItems', { ids: noDuplicateIds }).then(({ result: arrProducts }) => {
-        const listProduct = arrProducts.map((productItem) => {
-          const PRODUCT_ITEM = new ProductItem(
-            PRODUCT_ELEMENT_SELECTORS,
-            productItem,
-          );
-          PRODUCT_ITEM.createElement();
-          return PRODUCT_ITEM.getElement();
-        });
-        PRODUCT_STORAGE.cleanStorage() 
-        PRODUCT_STORAGE.addProducts(listProduct);
-        FOOTER_CONTROLLER.removeBlockingEvents();
-      });
-    })
-    .catch(error => console.error(error))
-    .finally(data => changingPage(currentPage))
-    
+    FETCH_API.request('getListId', { offset: initProduct, limit: 10 })
+      .then(({ result: response }) => sendArrId(response))
+      .catch(error => console.error(error))
   };
   
   changingPage();

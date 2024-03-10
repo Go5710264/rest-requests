@@ -24,7 +24,7 @@ export class InputController {
             this.currentFilter === 'price' 
                 ? this.valueInput = parseInt(this.input.value) 
                 : this.valueInput = this.input.value.toString() 
-            handlerClick(this.valueInput, this.currentFilter)
+            handlerClick(this.currentFilter, this.valueInput)
         });
     }
 

@@ -10,12 +10,183 @@ $colorMainFont: #262633;
   color: $colorMainFont
 }
 
+.section{
+  min-height:auto;
+}
+
 .events-blocked{
   pointer-events: none;
 }
 
-.header{
-  &__filter{
-    color: black;
+.header {
+  padding: 15px 25px;
+
+  // .header__container-box
+
+  &__container-box {
+    font-size: 18px;
   }
+
+  // .header__filter-wrapper
+
+  &__filter-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+    // .header__filter-lable
+
+  &__filter-lable{
+    
+  }
+
+  // .header__filter
+
+  &__filter {
+      color: black;
+      padding: 2px 3px;
+      border: solid black 1px;
+      border-radius: 11px;
+
+    &:focus{
+      border: dotted red 2px;
+    }
+
+    // .header__filter_product
+
+    &_product {
+    }
+
+    // .header__filter_price
+
+    &_price {
+    }
+
+    // .header__filter_brand
+
+    &_brand {
+    }
+  }
+
+  // .header__input-wrapper
+
+  &__input-wrapper {
+  }
+
+  // .header__input
+
+  &__input {
+    padding: 5px 7px;
+  }
+
+  // .header__input-button
+
+  &__input-button {
+    padding: 5px 7px;
+    font-size: 15px;
+  }
+
+  // .header__input-suggest-list
+
+  &__input-suggest-list {
+  }
+}
+
+.list-products {
+
+		// .list-products__container-box
+
+		&__container-box {
+		}
+
+    &__product{
+      display: flex;
+      &>*{
+        margin-right: 10px;
+        &:last-child{
+          margin-right: 0;
+        }
+      }
+    }
+
+    &__product-name{
+
+    }
+
+    &__product-brand{}
+
+    &__product-price{}
+}
+
+.footer {
+
+		// .footer__container-box
+
+		&__container-box {
+      display: flex;
+      align-items: center;
+		}
+
+		// .footer__pagination-arrow
+
+		&__pagination-arrow {
+
+      color: black;
+      padding: 2px 13px;
+      border: solid black 1px;
+      border-radius: 11px;
+
+			// .footer__pagination-arrow_back-page
+
+			&_back-page {
+			}
+
+			// .footer__pagination-arrow_ahead-page
+
+			&_ahead-page {
+			}
+		}
+
+		// .footer__pagination
+
+		&__pagination {
+      display: flex;
+      align-items: center;
+		}
+
+		// .footer__pagination-item
+
+		&__pagination-item {
+
+      color: black;
+      padding: 2px 13px;
+      border: solid black 1px;
+      border-radius: 11px;
+
+			// .footer__pagination-item_first
+
+			&_first {
+			}
+
+			// .footer__pagination-item_second
+
+			&_second {
+			}
+
+			// .footer__pagination-item_third
+
+			&_third {
+			}
+
+			// .footer__pagination-item_fourth
+
+			&_fourth {
+			}
+
+			// .footer__pagination-item_fifth
+
+			&_fifth {
+			}
+		}
 }
