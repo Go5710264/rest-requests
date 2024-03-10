@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       endpoints: {
         getFields: { point: 'get_fields', params: ['field', 'offset', 'limit'] },
-        getListId: { point: 'get_ids', params: ['offset', 'limit'] }, // возможен без парамсов
+        getListId: { point: 'get_ids', params: ['offset', 'limit'] },
         getItems: { point: 'get_items', params: ['ids'] },
         filter: { point: 'filter', params: ['product', 'price', 'brand'] },
       },
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     FOOTER_CONTROLLER.addBlockingEvents();
     FOOTER_CONTROLLER.setCurrentPage(currentNumberPage);
 
-    FETCH_API.request('getListId', { offset: initProduct, limit: 10 })
+    FETCH_API.request('getListId', { offset: initProduct, limit: 50 })
       .then(({ result: response }) => sendArrId(response))
       .catch((error) => console.error(error));
   }
