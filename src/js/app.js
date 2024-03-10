@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const FETCH_API = new FetchApi(
-    'http://api.valantis.store:40000/',
+    'https://api.valantis.store:41000/',
     getTimestamp(),
     {
       endpoints: {
