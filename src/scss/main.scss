@@ -113,28 +113,35 @@ $colorMainFont: #262633;
 		// .list-products__container-box
 
 		&__container-box {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      row-gap: 20px;
 		}
 
     &__product{
-      max-width: 30%;
-      height: 90px;
+      width: 29%;
+      height: auto;
       display: flex;
+      justify-content: space-evenly;
       flex-direction: column;
-      &>*{
-        margin-right: 10px;
-        &:last-child{
-          margin-right: 0;
-        }
-      }
     }
 
     &__product-name{
-
+      font-size: 15px;
+      font-weight: 500;
     }
 
-    &__product-brand{}
+    &__product-brand{
+      font-size: 13px;
+    }
 
-    &__product-price{}
+    &__product-price{
+      font-size: 20px;
+      font-weight: 600;
+      font-variant-numeric: lining-nums;
+      text-align: end;
+    }
 }
 
 .footer {
