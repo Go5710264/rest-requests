@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     container: 'list-products__product',
     product: 'list-products__product-name',
     brand: 'list-products__product-brand',
+    id: 'list-products__product-id',
     price: 'list-products__product-price',
   };
 
@@ -53,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'header__input-wrapper',
     'header__input',
     'header__input-button',
+    'header__warning',
   );
 
   FILTERS.addEvent();

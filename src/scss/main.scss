@@ -9,6 +9,14 @@ $colorMainFont: #262633;
   color: $colorMainFont
 }
 
+.hide{
+  display: none;
+}
+
+.show{
+  display:block;
+}
+
 .section{
   min-height:auto;
 }
@@ -18,11 +26,12 @@ $colorMainFont: #262633;
 }
 
 .header {
-  padding: 15px 0 25px 0;
+  padding: 15px 0 55px 0;
 
   // .header__container-box
 
   &__container-box {
+    position: relative;
     font-size: 18px;
   }
 
@@ -49,6 +58,7 @@ $colorMainFont: #262633;
     color: black;
     border-radius: 17px;
     background-color: rgba(180, 184, 204, 0.14);
+    font-size: 18px;
 
     &:focus{
       border: dotted red 2px;
@@ -106,6 +116,14 @@ $colorMainFont: #262633;
 
   &__input-suggest-list {
   }
+
+  &__warning{
+    position: absolute;
+    font-size: 19px;
+    color: red;
+    left: 25px;
+    top: 110px;
+  }
 }
 
 .list-products {
@@ -120,7 +138,7 @@ $colorMainFont: #262633;
 		}
 
     &__product{
-      width: 29%;
+      width: 26%;
       height: auto;
       display: flex;
       justify-content: space-evenly;
@@ -139,6 +157,13 @@ $colorMainFont: #262633;
     &__product-price{
       font-size: 20px;
       font-weight: 600;
+      font-variant-numeric: lining-nums;
+      text-align: end;
+    }
+
+    &__product-id{
+      font-size: 13px;
+      font-weight: 400;
       font-variant-numeric: lining-nums;
       text-align: end;
     }
