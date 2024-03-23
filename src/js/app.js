@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filter: { point: 'filter', params: ['product', 'price', 'brand'] },
       },
     },
+    getItemStorage,
   );
 
   const PRODUCT_STORAGE = new ProductStorage(
@@ -53,22 +54,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const INPUT_CONTROLLER = new InputController(
     'header__input-wrapper',
     'header__input',
-    'header__input-button',
+    'header__input-form',
     'header__warning',
   );
 
   FILTERS.addEvent();
-  INPUT_CONTROLLER.addBlockingEvents();
-  INPUT_CONTROLLER.addEventClickButton(requestWithFilter);
+  INPUT_CONTROLLER.hideInputField();
+  INPUT_CONTROLLER.addEventSubmitForm(requestWithFilter);
 
   function filterSelection(filter) {
-    INPUT_CONTROLLER.removeBlockingEvents();
+    INPUT_CONTROLLER.showInputField();
     INPUT_CONTROLLER.setSelectedFilter(filter);
   }
 
   function requestWithFilter(currentFilter, valueInput) {
-    FETCH_API.request('filter', { [currentFilter]: valueInput })
-      .then(({ result: response }) => sendArrId(response))
+    PRODUCT_STORAGE.cleanStorage();
+    FETCH_API.request('filter', { [currentFilter]: valueInput }, sendArrId)
+      .then((response) => sendArrId(response))
       .catch((error) => console.error(error));
   }
 
@@ -81,18 +83,17 @@ document.addEventListener('DOMContentLoaded', () => {
     return PRODUCT_ITEM.getElement();
   }
 
-  function fillStorage(arrTagProducts) {
+  function fillStorage({ result: arrProducts }) {
+    const listProduct = arrProducts.map((productItem) => getItemStorage(productItem));
     PRODUCT_STORAGE.cleanStorage();
-    PRODUCT_STORAGE.addProducts(arrTagProducts);
+    PRODUCT_STORAGE.addProducts(listProduct);
     FOOTER_CONTROLLER.removeBlockingEvents();
   }
 
-  function sendArrId(arrList) {
+  function sendArrId({ result: arrList }) {
     const noDuplicateIds = Array.from(new Set(arrList));
-    FETCH_API.request('getItems', { ids: noDuplicateIds }).then(({ result: arrProducts }) => {
-      const listProduct = arrProducts.map((productItem) => getItemStorage(productItem));
-      fillStorage(listProduct);
-    });
+    FETCH_API.request('getItems', { ids: noDuplicateIds }, fillStorage)
+      .then((response) => fillStorage(response));
   }
 
   let currentPage;
@@ -105,8 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
     FOOTER_CONTROLLER.addBlockingEvents();
     FOOTER_CONTROLLER.setCurrentPage(currentNumberPage);
 
-    FETCH_API.request('getListId', { offset: initProduct, limit: 50 })
-      .then(({ result: response }) => sendArrId(response))
+    FETCH_API.request('getListId', { offset: initProduct, limit: 50 },sendArrId)
+      .then((response) => sendArrId(response))
       .catch((error) => console.error(error));
   }
 

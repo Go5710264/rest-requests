@@ -1,7 +1,7 @@
 import { md5 } from 'js-md5';
 
 export class FetchApi {
-  constructor(url, timestamp, object) {
+  constructor(url, timestamp, object, handlerError) {
     this.curEndpoint = undefined;
     this.curParams = undefined;
     this.requestBody = {};
@@ -9,6 +9,8 @@ export class FetchApi {
     this.xauth = md5(`Valantis_${timestamp}`);
     this.endpoints = object.endpoints;
     this.options = {};
+    this.cache = {};
+    this.handlerError;
   }
 
   request(type, data = undefined) {
@@ -34,9 +36,18 @@ export class FetchApi {
       )
       .catch((err) => {
         console.error(err.message);
+        console.error(err.status);
+        this.cachingDecorator();
+        return
       });
 
     return this.resultRequest;
+  }
+
+  cachingDecorator(){
+    debugger
+    this._fetch().then(response => this.handlerError(response))
+    // this.handlerError(this._fetch());
   }
 
   _setRequestBody(paramsData) {

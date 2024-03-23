@@ -2,29 +2,32 @@ export class InputController {
   constructor(
     inputWrapper,
     inputSelector,
-    buttonSelector,
+    formSelector,
     warningSelector,
   ) {
     this.inputWrapper = document.querySelector(`.${inputWrapper}`);
     this.input = document.querySelector(`.${inputSelector}`);
-    this.button = document.querySelector(`.${buttonSelector}`);
+    this.form = document.querySelector(`.${formSelector}`);
     this.warning = document.querySelector(`.${warningSelector}`);
     this.valueInput = undefined;
     this.currentFilter = undefined;
   }
 
-  addBlockingEvents() {
-    this.inputWrapper.classList.add('events-blocked');
-    this.displayWarning(true);
+  hideInputField() {
+    if (this.inputWrapper.classList.contains('show')) this.inputWrapper.classList.remove('show')
+    this.inputWrapper.classList.add('hide');
+  }
+  
+  showInputField() {
+    this.input.value = '';
+    if (this.inputWrapper.classList.contains('hide')) this.inputWrapper.classList.remove('hide')
+    this.inputWrapper.classList.add('show');
   }
 
-  removeBlockingEvents() {
-    this.inputWrapper.classList.remove('events-blocked');
-    this.displayWarning();
-  }
-
-  addEventClickButton(handlerClick) {
-    this.button.addEventListener('click', () => {
+  addEventSubmitForm(handlerClick) {
+    this.form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      this.hideInputField();
       this.currentFilter === 'price'
         ? this.valueInput = parseInt(this.input.value, 10)
         : this.valueInput = this.input.value.toString();
@@ -34,17 +37,5 @@ export class InputController {
 
   setSelectedFilter(value) {
     this.currentFilter = value;
-  }
-
-  displayWarning(boolean){
-    if(boolean) {
-      this.warning.classList.remove('hide');
-      this.warning.classList.add('show');
-    } 
-
-    if(!boolean) {
-      this.warning.classList.add('hide');
-      this.warning.classList.remove('show');
-    }
   }
 }

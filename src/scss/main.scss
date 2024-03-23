@@ -26,7 +26,7 @@ $colorMainFont: #262633;
 }
 
 .header {
-  padding: 15px 0 55px 0;
+  padding: 15px 0 45px 0;
 
   // .header__container-box
 
@@ -42,7 +42,6 @@ $colorMainFont: #262633;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 15px;
   }
 
     // .header__filter-lable
@@ -60,8 +59,8 @@ $colorMainFont: #262633;
     background-color: rgba(180, 184, 204, 0.14);
     font-size: 18px;
 
-    &:focus{
-      border: dotted red 2px;
+    &:active{
+      border: solid black 1px;
     }
 
     // .header__filter_product
@@ -83,14 +82,14 @@ $colorMainFont: #262633;
   // .header__input-wrapper
 
   &__input-wrapper {
-    max-width: 30%;
-    display: flex;
-    justify-content: space-between;
+    margin-top: 15px;
   }
 
   // .header__input
 
   &__input {
+    display: inline-block;
+    margin-right: 20px;
     padding: 9px 10px;
     border: 1px solid black;
     border-radius: 17px;
@@ -104,6 +103,7 @@ $colorMainFont: #262633;
   // .header__input-button
 
   &__input-button {
+    display: inline-block;
     padding: 12px 13px;
     color: black;
     border-radius: 16px;
@@ -134,7 +134,7 @@ $colorMainFont: #262633;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      row-gap: 20px;
+      row-gap: 30px;
 		}
 
     &__product{

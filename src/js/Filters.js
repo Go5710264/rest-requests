@@ -10,10 +10,6 @@ export class Filters {
     this.handlerFiltering = handlerFiltering;
   }
 
-  showFilters() {
-    console.log(this.filtersList);
-  }
-
   addEvent() {
     this.filtersList.forEach((filterButton) => filterButton.addEventListener('click', () => this.wrapperHandler(filterButton)));
   }
