@@ -8,6 +8,7 @@ export class Filters {
     this.filterSelector = filterSelector;
     this.filtersList = document.querySelectorAll(`.${filterSelector}`);
     this.handlerFiltering = handlerFiltering;
+    this.filteredProducts=[]
   }
 
   addEvent() {
